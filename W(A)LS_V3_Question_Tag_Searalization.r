@@ -24,7 +24,7 @@ views_dt = data.table(views_dt)
 C_Q_Tag_M = unique(assess_dt %>% select(1,4,9))
     #= View(C_Q_Tag_M %>% group_by(question_id,question_tags,country) %>% summarise(count=n()))
 
-sereliz = C_Q_Tag_M[,2:3]
+sereliz = unique(C_Q_Tag_M[,2:3])
     #View(sereliz )
 
 #***********************************#
@@ -32,7 +32,7 @@ sereliz = C_Q_Tag_M[,2:3]
 #***********************************#
 sereliz_test =  reshape(transform(sereliz, time=ave(question_tags, question_id, FUN=seq_along)), idvar="question_id", direction="wide")
     #View(sereliz_test)
-Q_TAQ_SER = sereliz_test[,1:5]
+Q_TAQ_SER = unique(sereliz_test[,1:5])
     #View(Q_TAQ_SER)
 
 #Country_Question_Master
@@ -63,7 +63,7 @@ Ctry_View_M = data.table(unique(views_dt$country))    #22
   CountryDeck_M = data.table(CountryDeck_M)
 
 
-
+#rm(c)
 cntry_lst = unique(CountryDeck_M$country)
 stream_data5 = data.table()
 
@@ -82,6 +82,12 @@ views_sear_tags_dt = merge(views_dt,stream_data5[,c("country","deck_id","questio
 assess_sear_tags_dt = merge(assess_dt,C_Q_TAQ_SER[,c("country","question_id","question_tags.1","question_tags.2","question_tags.3","question_tags.4")
                                                  ],by = c("country","question_id"))
 
+#Making the Values Unique again
+views_sear_tags_uniq_dt = unique(views_sear_tags_dt)
+#reduces 200 k records from deduplication
+
+assess_sear_tags_uniq_dt = unique(assess_sear_tags_dt)
+#reduces 70 k records from deduplication
 
 
 #Checks 
@@ -133,3 +139,7 @@ filter(views_sear_tags_dt, views_sear_tags_dt$deck_id == "stream-de0d5c6a") # Pa
 # 5:           3    tag-13b3f31a    tag-95e2a186    tag-90e84621    tag-ef6a3c07      PE
 # 6:           3    tag-13b3f31a    tag-95e2a186    tag-90e84621    tag-ef6a3c07      PH
 #
+
+
+save.image("C:/Users/theiv/Documents/2019_ISS_MTech_EBAC/Capstone Project/FYP_TeamsStreamz/Data/Assess_Question_Tag_Searalized_V5.RData")
+load("C:/Users/theiv/Documents/2019_ISS_MTech_EBAC/Capstone Project/FYP_TeamsStreamz/Data/Assess_Question_Tag_Searalized_V5.RData")
