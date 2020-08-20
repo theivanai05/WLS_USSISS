@@ -6,14 +6,21 @@ library(data.table)
 #install.packages("dplyr")
 library(dplyr)
 #install.packages("R.utils")
-library(R.utils)
+#library(R.utils)
 
 setwd("C:/Users/theiv/Documents/2019_ISS_MTech_EBAC/Capstone Project/FYP_TeamsStreamz/Data")
+
+save.image("C:/Users/theiv/Documents/2019_ISS_MTech_EBAC/Capstone Project/FYP_TeamsStreamz/Data/Assess_Question_Tag_Searalized_V5.RData")
+load("C:/Users/theiv/Documents/2019_ISS_MTech_EBAC/Capstone Project/FYP_TeamsStreamz/Data/Assess_Question_Tag_Searalized_V5.RData")
+
 
 
 assess_dt = read_csv("user_assessments.gz")
 #master_dt= read_csv("user_master.gz")
 views_dt= read_csv("views_model.gz")
+
+pulsescore_Master = read.csv("master.csv",header=TRUE, sep= ",")
+View(pulsescore_Master)
 
 assess_dt = data.table(assess_dt)
 #master_dt = data.table(master_dt)
@@ -141,5 +148,3 @@ filter(views_sear_tags_dt, views_sear_tags_dt$deck_id == "stream-de0d5c6a") # Pa
 #
 
 
-save.image("C:/Users/theiv/Documents/2019_ISS_MTech_EBAC/Capstone Project/FYP_TeamsStreamz/Data/Assess_Question_Tag_Searalized_V5.RData")
-load("C:/Users/theiv/Documents/2019_ISS_MTech_EBAC/Capstone Project/FYP_TeamsStreamz/Data/Assess_Question_Tag_Searalized_V5.RData")
