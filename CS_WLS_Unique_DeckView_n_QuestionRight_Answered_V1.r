@@ -1,8 +1,8 @@
 ##This is File set is to create the Questions Tags and Decks IDs Viewed List 
 
 #Setting uP Working Directory
-#setwd("C:/Users/theiv/Documents/2019_ISS_MTech_EBAC/Capstone Project/FYP_TeamsStreamz")
-setwd("~/Documents/NUS_EBAC/")
+setwd("C:/Users/theiv/Documents/2019_ISS_MTech_EBAC/Capstone Project/FYP_TeamsStreamz")
+#setwd("~/Documents/NUS_EBAC/")
 
 
 ##(WIP)
@@ -66,10 +66,6 @@ View(u_c_q_t_M)
 u_q_t_M = unique(assess_dt[,c("masked_user_id","question_id", "no_of_trials","points_earned")])  #  "points_earned" 
 View(u_q_t_M)
 
-df = filter(u_c_q_t_M, masked_user_id == "ff73c9c4")
-df_B = filter(assess_sear_tags_uniq_dt, masked_user_id == "ff73c9c4")
-df_C = filter(u_q_t_M, masked_user_id == "ff73c9c4")
-
 # recommending on a daily basis day : ==> 
 # Trail 1 = 10 marks 
 # Trail 2 = 5 marks 
@@ -110,4 +106,5 @@ u_d_a_M[,(new_var):=dplyr::case_when(
 
 save.image("Data/V6.RData")
 load("Data/V6.RData")
+load("C:/Users/theiv/Documents/2019_ISS_MTech_EBAC/Capstone Project/FYP_TeamsStreamz/Data/CS_WLS_Code_withUserData_V2.RData")
 

@@ -8,7 +8,6 @@ library(recosystem)
 #load("E:/Theiv_lenovo_Yoga_bckup/theiv/Documents/2019_ISS_MTech_EBAC/2020-SEM4-Advanced_Customer_Analytics/Sem4_ACA/CS_WLS_Code_V1_withData.RData")
 
 load("C:/Users/theiv/Documents/2019_ISS_MTech_EBAC/Capstone Project/FYP_TeamsStreamz/Data/Assess_Question_Tag_Searalized_V5.RData")
-
 setwd("C:/Users/theiv/Documents/2019_ISS_MTech_EBAC/Capstone Project/FYP_TeamsStreamz")
 
 view_df = read_csv("views_model.gz")
@@ -163,23 +162,26 @@ View(qns_recommended)
   ####2)  Streams Viewed by Users D.T = u_d_a_M
   View(u_d_a_M)
   
-  # ==> Pass1 : STREAMS not yet answered 
+  # ==> Pass1 : STREAMS not yet Viewed 
   u_d_a_M %>% filter( masked_user_id == "002c7b9d" & completed == 0)
-  # ==> Pass2 : STREAMS already answered
-  streams_view_by_user = u_d_a_M %>% filter( masked_user_id == "002c7b9d" & completed == 0)
+  # ==> Pass2 : STREAMS already completed
+  streams_view_by_user = u_d_a_M %>% filter( masked_user_id == "002c7b9d" & completed == 1)
   streams_view_by_user = data.table(streams_view_by_user [,"deck_id"])
-
+  
+  ## Pulling out Deck IDs for the Corresponding TAGS recommended.   
+  sel.col <- c("question_tags.1","question_tags.2","question_tags.3","question_tags.4")
+  out.col <- c("deck_id","country","question_tags.1","question_tags.2","question_tags.3","question_tags.4")
+  # DeckIds- Streams : for Tags Recommended  
+  stream_recommended = views_sear_tags_uniq_dt[views_sear_tags_uniq_dt[, Reduce(`|`, lapply(.SD, `%in%`, tag_recommend[,c("qtag")])),.SDcols = sel.col],..out.col]
+  stream_recommended = unique(stream_recommended)
+  
   #Final User Unviewed list of STREAMS 
-  USER_Stream_Reco = qns_recommended[!streams_view_by_user, on="deck_id"]  
+  ## ?? Yet to Do ?? ##
+  USER_Stream_Reco = stream_recommended[!streams_view_by_user, on="deck_id"]  
   
   # ==> Streams Data : 
   View(views_sear_tags_uniq_dt)
   View(tag_recommend) 
-  
-  ## Pulling out Deck IDs for the Corresponding TAGS recommended.   
-  sel.col <- c("question_tags.1","question_tags.2","question_tags.3","question_tags.4")
-  out.col <- c("masked_user_id","country","deck_id")
-  views_sear_tags_uniq_dt[views_sear_tags_uniq_dt[, Reduce(`|`, lapply(.SD, `%in%`, tag_recommend[,c("qtag")])),.SDcols = sel.col],..out.col]
   
   #views_sear_tags_uniq_dt[eval(as.name(sel.col)) == "tag-5aed467d",..view.col]
   #views_sear_tags_uniq_dt[eval(as.name(sel.col)) %in% tag_recommend[,c("qtag")], ..sel.col] -- not ver efficient 
@@ -191,12 +193,25 @@ View(qns_recommended)
   userid_country_M %>% filter( masked_user_id == "002c7b9d")
   
   #Recommendation Based on the Country for a Single User: 
-  USER_Qns_Reco %>% filter(country %in% "IN")
+  #USER_Stream_Reco = USER_Stream_Reco %>% filter(country %in% "IN") %>% unique()
+  USER_Stream_Reco = USER_Stream_Reco %>% unique()
+  
+  USER_Qns_Reco = setcolorder(USER_Qns_Reco, c("country", "question_id", "qtags"))
+  USER_Stream_Reco = setcolorder(USER_Stream_Reco, c("country", "deck_id"))
+  
+write.csv(USER_Stream_Reco,"Data/UpSkill_Stream_Recommendation.csv")
+write.csv(USER_Qns_Reco,"Data/UpSkill_Question_Recommendation.csv")
+
+#Fields for the Streams : 
+  #country, masked_user_id , deck_id , predicted
+#Fields for the questions : 
+  #country, masked_user_id , question_id , predicted
+
 
 #???? ### Yet to Do ### ???? 
 #for the corresponding COuntry and Tags, 
 #Pick up the Corrsponding Decks IDs
-## ?? To DO
+## ?? To DO == > Picked up the 
 
 
 
